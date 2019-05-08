@@ -104,6 +104,41 @@ int attack(pk *rand_pk,pk *user_pk){
 	printf("%s  %d/%d  vs  %s  %d/%d\n\n", user_pk->name, user_pk->hp,user_pk->maxhp,
 			rand_pk->name, rand_pk->hp,rand_pk->maxhp);
 	return 10;
+}
+void add_pk(pk *user_pk,pk rand_pk,int num_user_total){
+		strcpy(user_pk[num_user_total].name,rand_pk.name);
+		strcpy(user_pk[num_user_total].type,rand_pk.type);
+		user_pk[num_user_total].maxhp = user_pk[num_user_total].hp = rand_pk.maxhp;
+		user_pk[num_user_total].power = rand_pk.power;
+}
+int run(pk rand_pk){
+	int hp_percent = ((double)rand_pk.hp/rand_pk.maxhp)*100;
+	int num_rand = rand()%10;
+	if(hp_percent == 100){
+		if(num_rand==0){
+			wait(1);
+			return 1;
+		}
+	}
+	else if(hp_percent >=50){
+		if((num_rand)<=3){
+			wait(1);
+			return 1;
+		}
+	}
+	else if(hp_percent >=25){
+		if((num_rand)<=6){
+			wait(1);
+			return 1;
+		}
+	}
+	else{ 
+		if((num_rand)<=8){
+			wait(1);
+			return 1;
+		}
+	}
+	return 0;
 }																							//공격함수 완성
 void fight(pk*pk_s,pk * user_pk, int num,int num_user_total){
 	pk * rand_user_pk;
@@ -177,9 +212,9 @@ void fight(pk*pk_s,pk * user_pk, int num,int num_user_total){
 				add_pk(user_pk,rand_pk,num_user_total);
 				wait(2);
 				return;
-			}
 
-		} 
+			} 
+		}
 		else if(key =='2'){
 			int run_result = run(rand_pk);
 			if(run_result == 1)
@@ -189,42 +224,6 @@ void fight(pk*pk_s,pk * user_pk, int num,int num_user_total){
 		{}
 	}
 }	
-void add_pk(pk *user_pk,pk rand_pk,int num_user_total){
-		strcpy(user_pk[num_user_total].name,rand_pk.name);
-		strcpy(user_pk[num_user_total].type,rand_pk.type);
-		user_pk[num_user_total].maxhp = user_pk[num_user_total].hp = rand_pk.maxhp;
-		user_pk[num_user_total].power = rand_pk.power;
-}
-int run(pk rand_pk){
-	srand(time(NULL));
-	int hp_percent = ((double)rand_pk.hp/rand_pk.maxhp)*100;
-	int num_rand = rand()%10;
-	if(hp_percent == 100){
-		if(num_rand==0){
-			wait(1);
-			return 1;
-		}
-	}
-	else if(hp_percent >=50){
-		if((num_rand)<=3){
-			wait(1);
-			return 1;
-		}
-	}
-	else if(hp_percent >=25){
-		if((num_rand)<=6){
-			wait(1);
-			return 1;
-		}
-	}
-	else{ 
-		if((num_rand)<=8){
-			wait(1);
-			return 1;
-		}
-	}
-	return 0;
-}
 int user_total_pk(pk*user_pk){
 	int i;
 	for(i = 0;i<6;i++)
@@ -249,7 +248,6 @@ int main(){
 	pk * user_pk;
 	num = pk_load(&pk_s);
 	init(&item);
-	printf("%s\n", item[0].item);
 	user_pk = calloc(6,sizeof(pk));
 	printf("============================\n");
 	printf("         포켓몬스터         \n");
