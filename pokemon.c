@@ -3,7 +3,6 @@
 #include<time.h>
 #include<string.h>
 
-
 typedef struct inventory {
 	char item[20];
 	int count;
@@ -34,48 +33,33 @@ void wait(int seconds) {
 	endwait = clock() + seconds * CLOCKS_PER_SEC;
 	while (clock() < endwait);
 }													//타이머 완성
-void selection(pk* user_pk, pk* pk_s) {
+void selection(pk* user_pk, pk* pk_s, int num) {
 	int key = 0;
 	srand(time(NULL));
 	printf("\n============================\n");
 	printf("어느 포켓몬을 고르시겠습니까?\n");
 	printf("1. 파이리 2. 이상해씨 3. 꼬부기\n>>");
 	while (key>'3' || key<'0') {
-		while (getchar() != '\n');
+		if(num != 1)
+			while (getchar() != '\n');
 		key = getchar();
 	}
-<<<<<<< HEAD
-	strcpy(user_pk[0].name, pk_s[key-49].name);
-	strcpy(user_pk[0].type, pk_s[key-49].type);
+	strcpy(user_pk[0].name, pk_s[key - 49].name);
+	strcpy(user_pk[0].type, pk_s[key - 49].type);
 	user_pk[0].power = 500;
 	user_pk[0].maxhp = user_pk[0].hp = 2000;
 }																							//포켓몬 처음 선택 완성
-void load(pk *user_pk, inv *item){
+void load(pk *user_pk, inv *item) {
 	int num_save;
 	FILE *load = fopen("savefile.txt", "rt");
-	fscanf(load,"%d", &num_save);
-	for(int i = 0;i<num_save;i++)
-		fscanf(load,"%*d %*c %s %*c %s %*c %d %*c %d %*c %d",user_pk[i].name, user_pk[i].type, &user_pk[i].power,&user_pk[i].hp, &user_pk[i].maxhp);
-	for(int j = 0;j<2;j++)
+	fscanf(load, "%d", &num_save);
+	for (int i = 0; i<num_save; i++)
+		fscanf(load, "%*d %*c %s %*c %s %*c %d %*c %d %*c %d", user_pk[i].name, user_pk[i].type, &user_pk[i].power, &user_pk[i].hp, &user_pk[i].maxhp);
+	for (int j = 0; j<2; j++)
 		fscanf(load, "%s %*c %d", item[j].item, &item[j].count);
 	fscanf(load, "%d", &item[0].money);
-	
+
 	fclose(load);
-=======
-	strcpy(user_pk[0].name, pk_s[key - 49].name);
-	strcpy(user_pk[0].type, pk_s[key - 49].type);
-	user_pk[0].power = (rand() % 51) + pk_s[key - 48].power;
-	user_pk[0].maxhp = user_pk[0].hp = (rand() % 501) + pk_s[key - 48].hp;
-}																							//포켓몬 처음 선택 완성
-void load(pk *user_pk) {
-	FILE *load = fopen("savefile.txt", "rt");
-	int a=0;
-	int i=0;
-	while (a != EOF) {
-		a = fscanf(load, "%*d %*c %s %*c %s %*c %d %*c %d", user_pk[i].name, user_pk[i].type, &user_pk[i].power, &user_pk[i].hp);
-		i++;
-	}
->>>>>>> 3845233fec53328b46ceed2c0a5de0a936669f92
 }																							//세이브파일 로드 완성
 pk mk_rand_pk(pk *pk_s, int pk_num) {
 	pk rand_pk;
@@ -85,77 +69,83 @@ pk mk_rand_pk(pk *pk_s, int pk_num) {
 	rand_pk.power = rand() % (101) + pk_s[pk_num].power;
 	return rand_pk;
 }																							//랜덤 포켓몬 생성 완성
-int attack(pk *rand_pk, pk *user_pk) {
+int attack(pk *rand_pk, pk *user_pk, char box1[], char box2[]) {
 	char user_type[20]; strcpy(user_type, user_pk->type);
 	char com_type[20];  strcpy(com_type, rand_pk->type);
 	wait(1);
 	if (strcmp(user_type, com_type) == 0) {
 		rand_pk->hp -= user_pk->power;
-		if(!rand_pk->hp <=0)
+		if (!rand_pk->hp <= 0)
 			user_pk->hp -= rand_pk->power;
 		printf("\n");
 	}
-<<<<<<< HEAD
-	else if(strcmp(user_type,"불")==0 && strcmp(com_type,"풀")==0
-		||strcmp(user_type,"물")==0 && strcmp(com_type,"불")==0
-		||strcmp(user_type,"풀")==0 && strcmp(com_type,"물")==0){
-		rand_pk->hp -= user_pk->power*1.5;
-		if(!rand_pk->hp <=0)
-			user_pk->hp -=rand_pk->power*0.5;
-		printf("\n효과는 굉장했다!\n");
-	}
-	else {
-		rand_pk->hp -= user_pk->power*0.5;
-		if(!rand_pk->hp <=0)	
-			user_pk->hp -= rand_pk->power*1.5;
-=======
 	else if (strcmp(user_type, "불") == 0 && strcmp(com_type, "풀") == 0
 		|| strcmp(user_type, "물") == 0 && strcmp(com_type, "불") == 0
 		|| strcmp(user_type, "풀") == 0 && strcmp(com_type, "물") == 0) {
-		user_pk->hp -= rand_pk->power*0.5;
 		rand_pk->hp -= user_pk->power*1.5;
-		printf("\n효과는 굉장했다!\n");
+		if (!rand_pk->hp <= 0)
+			user_pk->hp -= rand_pk->power*0.5;
+		printf("\n효과는 굉장했다!\n\n");
 	}
 	else {
-		user_pk->hp -= rand_pk->power*1.5;
 		rand_pk->hp -= user_pk->power*0.5;
->>>>>>> 3845233fec53328b46ceed2c0a5de0a936669f92
-		printf("\n효과가 별로인듯 하다!\n");
+		if (!rand_pk->hp <= 0)
+			user_pk->hp -= rand_pk->power*1.5;
+		printf("\n효과가 별로인듯 하다!\n\n");
 	}
 	wait(0.7);
+	int user_hp_percent = user_pk->hp >= 0 ? (double)user_pk->hp / user_pk->maxhp * 100 : 0;
+	int com_hp_percent = rand_pk->hp >= 0 ? (double)rand_pk->hp / rand_pk->maxhp * 100 : 0;
 	if (rand_pk->hp == 0) {
 		printf("앗! 포켓몬이 도망가버렸다!\n");
 		return 0;
 	}
-<<<<<<< HEAD
-	else if(rand_pk->hp<0){
-		printf("%s  %d/%d  vs  %s  %d/%d\n\n", user_pk->name, user_pk->hp,user_pk->maxhp,
-			rand_pk->name, 0,rand_pk->maxhp);
-		printf("포켓몬을 쓰러뜨렸다!\n");
-		return 2;
-	}
-	else if(user_pk->hp<=0){
-		printf("%s  %d/%d  vs  %s  %d/%d\n\n", user_pk->name, 0,user_pk->maxhp,
-			rand_pk->name, rand_pk->hp,rand_pk->maxhp);
-		return 1;
-	}
-	printf("%s  %d/%d  vs  %s  %d/%d\n\n", user_pk->name, user_pk->hp,user_pk->maxhp,
-			rand_pk->name, rand_pk->hp,rand_pk->maxhp);
-=======
-	else if (user_pk->hp <= 0) {
-		printf("%s  %d/%d  vs  %s  %d/%d\n\n", user_pk->name, 0, user_pk->maxhp,
-			rand_pk->name, rand_pk->hp, rand_pk->maxhp);
-		return 1;
-	}
 	else if (rand_pk->hp<0) {
-		printf("%s  %d/%d  vs  %s  %d/%d\n\n", user_pk->name, user_pk->hp, user_pk->maxhp,
-			rand_pk->name, 0, rand_pk->maxhp);
+		printf("               %s     %s \n               %d/%d\n", rand_pk->name, rand_pk->type, 0, rand_pk->maxhp);
+		printf("               ");
+		for (int i = 0; i < com_hp_percent / 10; i++)
+			printf("%s", box1);
+		for (int j = 0; j < 10 - com_hp_percent / 10; j++)
+			printf("%s", box2);
+		printf("\n\n\n");
+		printf("%s     %s\n%d/%d\n", user_pk->name, user_pk->type, user_pk->hp, user_pk->maxhp);
+		for (int i = 0; i < user_hp_percent/10; i++)
+			printf("%s", box1);
+		for (int j = 0; j < 10 - user_hp_percent / 10; j++)
+			printf("%s", box2);
+		printf("\n\n");
 		printf("포켓몬을 쓰러뜨렸다!\n");
 		return 2;
 	}
-	printf("%s  %d/%d  vs  %s  %d/%d\n\n", user_pk->name, user_pk->hp, user_pk->maxhp,
-		rand_pk->name, rand_pk->hp, rand_pk->maxhp);
->>>>>>> 3845233fec53328b46ceed2c0a5de0a936669f92
+	else if (user_pk->hp <= 0) {
+		printf("               %s     %s \n               %d/%d\n", rand_pk->name, rand_pk->type, rand_pk->hp, rand_pk->maxhp);
+		printf("               ");
+		for (int i = 0; i < com_hp_percent / 10; i++)
+			printf("%s", box1);
+		for (int j = 0; j < 10 - com_hp_percent / 10; j++)
+			printf("%s", box2);
+		printf("\n\n\n");
+		printf("%s     %s\n%d/%d\n", user_pk->name, user_pk->type, 0, user_pk->maxhp);
+		for (int i = 0; i < user_hp_percent/10; i++)
+			printf("%s", box1);
+		for (int j = 0; j < 10 - user_hp_percent / 10; j++)
+			printf("%s", box2);
+		printf("\n\n");
+		return 1;
+	}
+	printf("               %s     %s \n               %d/%d\n", rand_pk->name, rand_pk->type, rand_pk->hp, rand_pk->maxhp);
+	printf("               ");
+	for (int i = 0; i < com_hp_percent / 10; i++)
+		printf("%s", box1);
+	for (int j = 0; j < 10 - com_hp_percent / 10; j++)
+		printf("%s", box2);
+	printf("\n\n\n");
+	printf("%s     %s\n%d/%d\n", user_pk->name, user_pk->type, user_pk->hp, user_pk->maxhp);
+	for (int i = 0; i < user_hp_percent/10; i++)
+		printf("%s", box1);
+	for (int j = 0; j < 10 - user_hp_percent / 10; j++)
+		printf("%s", box2);
+	printf("\n\n");
 	return 10;
 }
 void add_pk(pk *user_pk, pk rand_pk, int num_user_total) {
@@ -191,33 +181,33 @@ int run(pk rand_pk) {
 			return 1;
 		}
 	}
+	printf("도망에 실패했다!\n");
 	return 0;
 }																							//공격함수 완성
-<<<<<<< HEAD
-int throw_ball(pk rand_pk,pk * pk_name,inv *item){
-	double hp_percent = (double)rand_pk.hp/rand_pk.maxhp*100;
+int throw_ball(pk rand_pk, pk * pk_name, inv *item) {
+	double hp_percent = (double)rand_pk.hp / rand_pk.maxhp * 100;
 	printf("가랏! 몬스터볼!\n");
-	item[0].count --;
+	item[0].count--;
 	wait(2);
-	if(hp_percent>50){
+	if (hp_percent>50) {
 		printf("체력을 더 깍아주세요\n");
 	}
-	else if(hp_percent>=30){
-		if(rand()%10<=2){
+	else if (hp_percent >= 30) {
+		if (rand() % 10 <= 2) {
 			printf("포켓몬을 잡았다! 이름을 입력해 주세요\n");
 			scanf("%s", pk_name->name);
 			return 1;
 		}
 	}
-	else if(hp_percent >=10){
-		if(rand()%10<=5){
+	else if (hp_percent >= 10) {
+		if (rand() % 10 <= 5) {
 			printf("포켓몬을 잡았다! 이름을 입력해 주세요\n");
 			scanf("%s", pk_name->name);
 			return 1;
 		}
 	}
-	else{
-		if(rand()%10<=8){
+	else {
+		if (rand() % 10 <= 8) {
 			printf("포켓몬을 잡았다! 이름을 입력해 주세요\n");
 			scanf("%s", pk_name->name);
 			return 1;
@@ -226,15 +216,14 @@ int throw_ball(pk rand_pk,pk * pk_name,inv *item){
 	printf("포켓몬이 몬스터볼을 빠져나왔다!\n");
 	return 10;
 }
-void fight(pk*pk_s,pk * user_pk, int num,int num_user_total, inv *item){
-=======
-void fight(pk*pk_s, pk * user_pk, int num, int num_user_total) {
->>>>>>> 3845233fec53328b46ceed2c0a5de0a936669f92
+void fight(pk*pk_s, pk * user_pk, int num, int num_user_total, inv *item) {
 	pk * rand_user_pk;
 	int pk_num;
 	int key, prev_key = 0;
+	int maxhp;
 	int num_user_rand;
 	pk rand_pk;
+	char box1[10] = "■", box2[10] = "□";
 	int result, a = 1, count = 1;
 	do
 		num_user_rand = rand() % num_user_total;
@@ -247,7 +236,22 @@ void fight(pk*pk_s, pk * user_pk, int num, int num_user_total) {
 	rand_user_pk = &user_pk[num_user_rand];
 	rand_pk = mk_rand_pk(pk_s, pk_num);
 	printf("\n============================\n");
-	printf(" 야생의 포켓몬이 나타났다!  \n");
+	printf(" 야생의 포켓몬이 나타났다!  \n\n");
+	int user_hp_percent = user_pk->hp >= 0 ? (double)user_pk->hp / user_pk->maxhp * 100 : 0;
+	int com_hp_percent = rand_pk.hp >= 0 ? (double)rand_pk.hp / rand_pk.maxhp * 100 : 0;
+	printf("               %s     %s \n               %d/%d\n", rand_pk.name, rand_pk.type, rand_pk.hp, rand_pk.maxhp);
+	printf("               ");
+	for (int i = 0; i < com_hp_percent / 10; i++)
+		printf("%s", box1);
+	for (int j = 0; j < 10 - com_hp_percent / 10; j++)
+		printf("%s", box2);
+	printf("\n\n\n");
+	printf("%s     %s\n%d/%d\n", user_pk->name, user_pk->type, user_pk->hp, user_pk->maxhp);
+	for (int i = 0; i < user_hp_percent / 10; i++)
+		printf("%s", box1);
+	for (int j = 0; j < 10 - user_hp_percent / 10; j++)
+		printf("%s", box2);
+	printf("\n\n");
 	while (1) {
 		printf("1.공격 2.도망치기 3.가방열기\n");
 		do {
@@ -258,7 +262,7 @@ void fight(pk*pk_s, pk * user_pk, int num, int num_user_total) {
 		} while (key != '1' && key != '2' &&key != '3' || (key == '2'&& prev_key == '2'));
 		prev_key = key;
 		if (key == '1') {
-			result = attack(&rand_pk, rand_user_pk);
+			result = attack(&rand_pk, rand_user_pk, box1, box2);
 			if (result == 0) {
 				wait(2);
 				return;
@@ -308,75 +312,71 @@ void fight(pk*pk_s, pk * user_pk, int num, int num_user_total) {
 			if (run_result == 1)
 				return;
 		}
-<<<<<<< HEAD
-		else if(key == '3'){
+		else if (key == '3') {
 			printf("\n============================\n");
 			printf("1. %s	x%d\n", item[0].item, item[0].count);
 			printf("2. %s	x%d\n", item[1].item, item[1].count);
-			do{
-				while(getchar()!='\n');
+			do {
+				while (getchar() != '\n');
 				key = getchar();
-				if(item[0].count == 0&& key == '1' || item[1].count == 0&& key == '2')
-					printf("개수가 부족합니다.\n");}
-			while(key!='0' && key!='1' && key!= '2' || (item[0].count == 0&& key == '1' || item[1].count == 0&& key == '2'));
-			if(key == '0'){
+				if (item[0].count == 0 && key == '1' || item[1].count == 0 && key == '2')
+					printf("개수가 부족합니다.\n");
+			} while (key != '0' && key != '1' && key != '2' || (item[0].count == 0 && key == '1' || item[1].count == 0 && key == '2'));
+			if (key == '0') {
 				continue;
 			}
-			else if(key == '1'){
-				result = throw_ball(rand_pk,&rand_pk,item);
-				if(result == 1){
+			else if (key == '1') {
+				result = throw_ball(rand_pk, &rand_pk, item);
+				if (result == 1) {
 					add_pk(user_pk, rand_pk, num_user_total);
 					return;
 				}
 			}
-			else if(key == '2'){
+			else if (key == '2') {
 				rand_user_pk->hp = (int)(rand_user_pk->hp*1.3);
-				item[1].count --;
-				if(rand_user_pk->hp >rand_user_pk->maxhp)
+				item[1].count--;
+				if (rand_user_pk->hp >rand_user_pk->maxhp)
 					rand_user_pk->hp = rand_user_pk->maxhp;
 				continue;
 			}
 		}
 	}
-}	
-void shopping(inv * item){
+}
+void shopping(inv * item) {
 	int key;
-	while(1){
+	int count = 0;
+	while (1) {
 		printf("\n============================\n");
 		printf("1. %s	%d\n", item[0].item, 1000);
 		printf("2. %s	%d\n", item[1].item, 2500);
-		printf(" 보유 금액 : %d\n",item[0].money); 
-		do{
-			while(getchar()!='\n');
-			key = getchar();}
-		while(key!='0'&& key!='1'&&key!='2');
-		if(key == '1'){
-			if(item[0].money >= 1000){
+		printf(" 보유 금액 : %d\n", item[0].money);
+		do {
+			while (getchar() != '\n');
+			key = getchar();
+		} while (key != '0'&& key != '1'&&key != '2');
+		if (key == '0')
+			return;
+		printf("몇개를 구매하시겠습니까?");
+		scanf("%d", &count);
+		if (key == '1') {
+			if (item[0].money >= count*1000) {
 				item[0].count++;
-				item[0].money -= 1000;
+				item[0].money -= count*1000;
 			}
 			else printf("돈이 부족합니다\n");
 		}
-		else if(key == '2'){
-			if(item[0].money >=2500){
+		else if (key == '2') {
+			if (item[0].money >= count*2500) {
 				item[1].count++;
-				item[0].money -= 2500;
+				item[0].money -= count*2500;
 			}
 			else printf("돈이 부족합니다\n");
 		}
 		else return;
-	}	
-}
-
-int user_total_pk(pk*user_pk){
-=======
-		else if (key == '3')
-		{
-		}
 	}
 }
+
 int user_total_pk(pk*user_pk) {
->>>>>>> 3845233fec53328b46ceed2c0a5de0a936669f92
 	int i;
 	for (i = 0; i<6; i++)
 		if (user_pk[i].maxhp == 0)
@@ -385,18 +385,11 @@ int user_total_pk(pk*user_pk) {
 }
 void init(inv **item) {
 	(*item) = (inv*)calloc(2, sizeof(inv));
-<<<<<<< HEAD
-	strcpy((*item)[0].item ,"몬스터볼");
-	strcpy((*item)[1].item ,"회복물약");
-	(*item)[0].count =0;
-	(*item)[1].count =0;
-	(*item)[0].money = 10000;
-=======
-	strcpy((*item)[0].item, "몬스터 볼");
-	strcpy((*item)[1].item, "회복 물약");
+	strcpy((*item)[0].item, "몬스터볼");
+	strcpy((*item)[1].item, "회복물약");
 	(*item)[0].count = 0;
 	(*item)[1].count = 0;
->>>>>>> 3845233fec53328b46ceed2c0a5de0a936669f92
+	(*item)[0].money = 10000;
 	return;
 }
 int main() {
@@ -407,12 +400,8 @@ int main() {
 	pk * pk_s;
 	pk * user_pk;
 	num = pk_load(&pk_s);
-<<<<<<< HEAD
-	user_pk = calloc(6,sizeof(pk));
-=======
-	init(&item);
 	user_pk = calloc(6, sizeof(pk));
->>>>>>> 3845233fec53328b46ceed2c0a5de0a936669f92
+	init(&item);
 	printf("============================\n");
 	printf("         포켓몬스터         \n");
 	printf("  press enter key to start  \n");
@@ -424,25 +413,17 @@ int main() {
 		while (key != '1' && key != '2') {
 			key = getchar();
 		}
-<<<<<<< HEAD
-		if(key == '1'){
-			selection(user_pk,pk_s);
+		if (key == '1') {
+			selection(user_pk, pk_s,2);
 			init(&item);
 		}
-		else if(key == '2'){
-			item = calloc(2,sizeof(inv));
-			load(user_pk, item);
-=======
-		if (key == '1') {
-			selection(user_pk, pk_s);
-		}
 		else if (key == '2') {
-			load(user_pk);
->>>>>>> 3845233fec53328b46ceed2c0a5de0a936669f92
+			item = calloc(2, sizeof(inv));
+			load(user_pk, item);
 		}
 	}
 	else {
-		selection(user_pk, pk_s);
+		selection(user_pk, pk_s, 1);
 		init(&item);
 	}
 	while (1) {
@@ -455,23 +436,22 @@ int main() {
 		} while (key != '1' && key != '2'&&key != '3');
 		if (key == '1') {
 			num_user_total = user_total_pk(user_pk);
-<<<<<<< HEAD
-			fight(pk_s,user_pk,num,num_user_total, item);
+			fight(pk_s, user_pk, num, num_user_total, item);
 		}
-		else if(key == '2'){
+		else if (key == '2') {
 			printf("저장하시겠습니까?\n");
 			printf("1. 예   2.아니요\n");
-			do{
-				while(getchar()!='\n');
-				key = getchar(); }
-			while(key!='0'&&key !='1'&& key!='2');
-			if(key == '1'){
+			do {
+				while (getchar() != '\n');
+				key = getchar();
+			} while (key != '0'&&key != '1'&& key != '2');
+			if (key == '1') {
 				save = fopen("savefile.txt", "wt");
 				num_user_total = user_total_pk(user_pk);
 				fprintf(save, "%d\n", num_user_total);
-				for(int i =0;i<num_user_total;i++)
-					fprintf(save, "%d_%s | %s | %d | %d/%d\n", i+1, user_pk[i].name, user_pk[i].type, user_pk[i].power, user_pk[i].hp, user_pk[i].maxhp);
-				for(int j = 0;j<2;j++)
+				for (int i = 0; i<num_user_total; i++)
+					fprintf(save, "%d_%s | %s | %d | %d/%d\n", i + 1, user_pk[i].name, user_pk[i].type, user_pk[i].power, user_pk[i].hp, user_pk[i].maxhp);
+				for (int j = 0; j<2; j++)
 					fprintf(save, "%s | %d\n", item[j].item, item[j].count);
 				fprintf(save, "%d\n", item[0].money);
 				fclose(save);
@@ -480,18 +460,15 @@ int main() {
 				free(item);
 				return 0;
 			}
-			else if (key == '2'){
+			else if (key == '2') {
 				free(pk_s);
 				free(user_pk);
 				free(item);
 				return 0;
 			}
 		}
-		else if(key == '3'){
+		else if (key == '3') {
 			shopping(item);
-=======
-			fight(pk_s, user_pk, num, num_user_total);
->>>>>>> 3845233fec53328b46ceed2c0a5de0a936669f92
 		}
 	}
 }
