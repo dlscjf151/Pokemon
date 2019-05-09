@@ -45,8 +45,8 @@ void selection(pk* user_pk, pk* pk_s){
 	}
 	strcpy(user_pk[0].name, pk_s[key-49].name);
 	strcpy(user_pk[0].type, pk_s[key-49].type);
-	user_pk[0].power = (rand()%51)+pk_s[key-48].power;
-	user_pk[0].maxhp = user_pk[0].hp = (rand()%501)+pk_s[key-48].hp;
+	user_pk[0].power = 500;
+	user_pk[0].maxhp = user_pk[0].hp = 2000;
 }																							//포켓몬 처음 선택 완성
 void load(pk *user_pk, inv *item){
 	int num_save;
