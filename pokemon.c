@@ -360,14 +360,14 @@ void shopping(inv * item) {
 		scanf("%d", &count);
 		if (key == '1') {
 			if (item[0].money >= count*1000) {
-				item[0].count++;
+				item[0].count+=count;
 				item[0].money -= count*1000;
 			}
 			else printf("돈이 부족합니다\n");
 		}
 		else if (key == '2') {
 			if (item[0].money >= count*2500) {
-				item[1].count++;
+				item[1].count+=count;
 				item[0].money -= count*2500;
 			}
 			else printf("돈이 부족합니다\n");
